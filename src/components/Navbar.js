@@ -1,6 +1,10 @@
 import React, { Component} from 'react'
-import Card from './Card';
 import './Nav.css';
+import { auth } from '../firebase';
+
+// import Post from './Post';
+// import { initializeApp } from "firebase/app";
+// import { getAnalytics } from "firebase/analytics";
 
 export default class Navbar extends Component {
 
@@ -26,10 +30,12 @@ export default class Navbar extends Component {
 			this.setState({toggle : '',count : 0,notch : 'Close'})
 		}
 	  }
+
+	  
     return (
       <div>
        
-	<div className={`vertical-nav bg-dark ${this.state.toggle}`} id="sidebar">
+	<div className={`vertical-nav bg-dark ${this.props.toggle}`} id="sidebar">
   		<div className="py-4 px-3 mb-4 bg-dark">   		
       		<div className="media-body">
         		<h4 className="font-weight-white text-muted mb-0">PROFILE</h4>
@@ -73,28 +79,15 @@ export default class Navbar extends Component {
                 		Edit Profile
             		</a>
     			</li>
+				<li className="nav-item nav-out">
+      				<a href="/" onClick={()=>auth.signOut()} className="nav-link text-light font-italic">
+                	<i className="fa fa-bar-chart mr-3 text-danger fa-fw">Sign Out</i>
+                		
+            		</a>
+    			</li>
   			</ul>
 	</div>
-
-	<div className={`page-content p-5 ${this.state.toggle}`} id="content">
-  		<button onClick={tog} id="sidebarCollapse" type="button" className="btn btn-dark bg-dark rounded-pill shadow-sm px-4 mb-4" ><i className="fa fa-bars mr-2"></i><small className="text-uppercase font-weight-bold">{this.state.notch}</small></button>
-  	<h2 className="display-4 text-white">QUOTES</h2>
-  		{/* <p className="lead text-white mb-0">Build a fixed sidebar using Bootstrap 4 vertical navigation and media objects.</p> 		 */}
-  	<div className="separator">
-  		
-	  <div className="container px-4 text-center">
-  <div className="row gx-5">
-    <div className="col">
-		<Card/>
-    </div>
-    <div className="col">
-		<Card/>
-    </div>
-  </div>
-</div>
-	  </div>
-
-	  </div>
+	  
 	  </div>
     )
   }
