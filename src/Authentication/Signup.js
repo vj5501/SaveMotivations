@@ -3,11 +3,26 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import "./login.css"
 import {createUserWithEmailAndPassword} from 'firebase/auth';
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
 import { Link } from 'react-router-dom';
+import {addDoc, collection} from "firebase/firestore"
+import { useUserAuth } from '../context/AuthContext';
 
+
+const usersCollectionRef = collection(db ,"user")
 
 export default function Signup() {
+
+    const[firstName,setNewUser] = useState("");
+    const[lastName,setLastName] = useState("");
+    // const[newemail,setNewEmail] = useState("");
+    // const[newPass,setNewPass] = useState("");
+
+
+    const{sname,fetchFireStore} = useUserAuth();
+
+
+   // const[user,setUser] = useState("");
 
     const[passT,setType] = useState("password");
 
@@ -40,13 +55,35 @@ export default function Signup() {
         setPassword(event.target.value)
     }
 
-    const registered = () =>
+    const registered = async() =>
     {
-        createUserWithEmailAndPassword(auth, email, password)
-        .then(auth=>{navigate("/login")})
-        .catch(error=>console.log(error))
+        
+        await createUserWithEmailAndPassword(auth, email, password)
+        .then(navigate("/login"))
+        .catch(error=>alert("Account is already Created"))
+        
+
+         await addDoc(usersCollectionRef,{first_name : firstName,last_name : lastName,email : email})
+
 
     }
+
+    
+
+    // useEffect(()=>{
+    //     const getUSer = async () =>
+    //     {
+    //         const data = await getDoc(usersCollectionRef)
+    //         setUser(data.docs.map((doc) => ({...doc.data(),id : doc.id})))
+    //     };
+    //     getUSer();
+    // },[]);userCollectionRef
+
+    // const createUser = async() =>
+    // {
+    //     await addDoc(usersCollectionRef,{name : firstName})
+    // }
+
   return (
     <div>
         <div className="container-fluid">
@@ -62,11 +99,11 @@ export default function Signup() {
 					</div>
 					<div className="row">
 							<div className="row">
-								<input type="text" className="form__input" placeholder="First Name"/>
-                                <input type="text" className="form__input" placeholder="Last Name"/>
+								<input type="text" onChange={(event=>{setNewUser(event.target.value)})} className="form__input" placeholder="First Name"/>
+                                <input type="text" onChange={(event=>{setLastName(event.target.value)})} className="form__input" placeholder="Last Name"/>
 							</div>
                             <div className="row">
-                                <input type="email" onChange={handleChangeEmail}  className="form__input" placeholder="Email Address"/>
+                                <input type="email" onChange={handleChangeEmail} className="form__input" placeholder="Email Address"/>
 							</div>
 							<div className="row">
 								<input type="password" onChange={handleChangePassword}  className="form__input" placeholder="Password"/>
@@ -87,3 +124,5 @@ export default function Signup() {
     </div>
   )
 }
+
+export {usersCollectionRef};
