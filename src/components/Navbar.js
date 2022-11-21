@@ -1,6 +1,8 @@
 import React, { Component} from 'react'
 import './Nav.css';
 import { auth } from '../firebase';
+import { userAuthContext } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
 
 // import Post from './Post';
 // import { initializeApp } from "firebase/app";
@@ -8,28 +10,37 @@ import { auth } from '../firebase';
 
 export default class Navbar extends Component {
 
-	 
+	 static contextType = userAuthContext;
 
 	constructor() {
 		super();
 		this.state = {
 		  toggle: '',
 		  count:0,
-		  notch:'Close'
+		  notch:'Close',
+		  name:"",
+		  emailId : ""
 		};
 	  }
+
+	  
+	  componentDidMount()
+	  {
+	  }
+	  
   render() {
     //const[classToggle,setClassToggle] = useState('active')
-	const  tog = () => {
+
+	// const  tog = () => {
 		
-		if(this.state.count===0)
-		{
-		 this.setState({toggle : 'active',count : 1,notch : 'Open'})
-		}
-		else{
-			this.setState({toggle : '',count : 0,notch : 'Close'})
-		}
-	  }
+	// 	if(this.state.count===0)
+	// 	{
+	// 	 this.setState({toggle : 'active',count : 1,notch : 'Open'})
+	// 	}
+	// 	else{
+	// 		this.setState({toggle : '',count : 0,notch : 'Close'})
+	// 	}
+	//   }
 
 	  
     return (
@@ -39,28 +50,27 @@ export default class Navbar extends Component {
   		<div className="py-4 px-3 mb-4 bg-dark">   		
       		<div className="media-body">
         		<h4 className="font-weight-white text-muted mb-0">PROFILE</h4>
-        		<p className="font-weight-grey text-muted mb-0">User Name</p>
-      		</div>  		
+        		 <p className="font-weight-grey text-muted mb-0">{this.props.emailId}</p>
+			</div>  		
   		</div>
-
   		<ul className="nav flex-column bg-dark mb-0">
     		<li className="nav-item">
-      			<a href="/" className="nav-link text-light font-italic">
+      			<Link to="/home" className="nav-link text-light font-italic">
                 	<i className="fa fa-th-large mr-3 text-primary fa-fw"></i>
                 		Home
-            	</a>
+            	</Link>
     		</li>
     		<li className="nav-item">
-      			<a href="/" className="nav-link text-light font-italic">
+      			<Link to="/yourpost" className="nav-link text-light font-italic">
                 	<i className="fa fa-address-card mr-3 text-primary fa-fw"></i>
                 	Your Post
-            	</a>
+            	</Link>
     		</li>
     		<li className="nav-item">
-      			<a href="/" className="nav-link text-light font-italic">
+      			<Link to="/service" className="nav-link text-light font-italic">
                 	<i className="fa fa-cubes mr-3 text-primary fa-fw"></i>
                 	Services
-            	</a>
+            	</Link>
     		</li>
     		{/* <li className="nav-item">
       			<a href="/" className="nav-link text-dark font-italic">
@@ -74,18 +84,21 @@ export default class Navbar extends Component {
 
   			<ul className="nav flex-column bg-dark mb-0">
     			<li className="nav-item">
-      				<a href="/" className="nav-link text-light font-italic">
+      				<Link to="/edit" className="nav-link text-light font-italic">
                 	<i className="fa fa-bar-chart mr-3 text-primary fa-fw"></i>
                 		Edit Profile
-            		</a>
+            		</Link>
     			</li>
 				<li className="nav-item nav-out">
-      				<a href="/" onClick={()=>auth.signOut()} className="nav-link text-light font-italic">
+      				<p onClick={()=>auth.signOut()} className="nav-link text-light font-italic">
                 	<i className="fa fa-bar-chart mr-3 text-danger fa-fw">Sign Out</i>
                 		
-            		</a>
+            		</p>
     			</li>
   			</ul>
+			<footer>
+				created by VOK
+			</footer>
 	</div>
 	  
 	  </div>

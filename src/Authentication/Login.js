@@ -1,11 +1,11 @@
-import {createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import React from 'react'
 import { useState } from 'react'
-import { auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import "./login.css"
-import Signup from './Signup';
-import { async } from '@firebase/util';
+import { useUserAuth } from '../context/AuthContext';
+import { EmailAuthProvider, signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase';
+
 
 export default function Login() {
 
@@ -13,9 +13,15 @@ export default function Login() {
     const[email,setEmail] = useState("");
     const[password,setPassword] = useState("");
 
+    const {logIn} = useUserAuth();
+
+
+    const[authentication,setAuthentication] = useState(localStorage.getItem(localStorage.getItem('authentication') || false));
+
+    
    const handleChangeEmail =(event)=>
     {
-        setEmail(event.target.value)
+        setEmail(event.target.value);
     }
 
     const handleChangePassword =(event)=>
@@ -34,9 +40,11 @@ export default function Login() {
 
     const LogIn = () =>
     {
-        signInWithEmailAndPassword(auth,email,password)
+
+        logIn(email,password)
         .then(auth=>navigate("/home"))
         .catch(error=>alertMsg(error))
+       
     }
 
     const alertMsg = (e)=>
